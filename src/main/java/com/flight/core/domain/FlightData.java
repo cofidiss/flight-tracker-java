@@ -23,6 +23,7 @@ public class FlightData {
 
     @JsonProperty("status")
     private String status;
+    public String a;
 
     // Getter ve Setter metodları
     public String getFlightId() {

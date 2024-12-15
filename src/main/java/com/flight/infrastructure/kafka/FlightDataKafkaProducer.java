@@ -3,6 +3,7 @@ package com.flight.infrastructure.kafka;
 
 
 import com.flight.core.domain.FlightData;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +16,13 @@ public class FlightDataKafkaProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendLiveFlightData(FlightData flightData) {
-        var a = new FlightData();
-        kafkaTemplate.send("live-flight-data", a);
+    public void sendLiveFlightData(String key, FlightData flightData) {
+        kafkaTemplate.send("live-data",key, flightData);  // Kafka topic'ine veri gönderiliyor
+
     }
 
-    public void sendHistoricalFlightData(FlightData flightData) {
-        kafkaTemplate.send("historical-flight-data", flightData);
-    }
-}
+    public void sendHistoricalFlightData(String key, FlightData flightData) {
+        kafkaTemplate.send("historical-data",key, flightData);  // Kafka topic'ine veri gönderiliyor
+    } }
+
+

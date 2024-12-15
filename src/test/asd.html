@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Example</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+  <h1>WebSocket Kafka Example</h1>
+  <div id="messages"></div> <!-- Mesajlar burada görünecek -->
+
+ <script >
+      // WebSocket bağlantısını kur
+    function connectWebSocket() {
+      const sessionId = getSessionId();  // Session ID'yi al (cookie'den ya da bir başka yöntemle)
+      const socketUrl = `http://localhost:8080/ws`;  // WebSocket URL'ini oluştur
+    
+      // WebSocket'i oluştur
+      const socket = new SockJS(socketUrl);
+      const stompClient = Stomp.over(socket);
+    
+      // WebSocket bağlantısını aç
+      stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.send("/app/live",  {},sessionId);
+        // Bu sessionId'ye özel topic'e abone ol
+        stompClient.subscribe(`/topic/${sessionId}`, function (messageOutput) {
+          // Kafka'dan gelen mesajı al ve WebSocket ile ilet
+          console.log('Received message: ' + messageOutput.body);
+    
+          // Mesajı DOM veya başka bir alanda göster
+          displayMessage(messageOutput.body);
+        });
+      });
+    }
+    
+    // Get sessionId from cookie or generate one if needed
+    function getSessionId() {
+     
+      return Math.floor(Math.random() * 10) + 1;
+    }
+    
+    // Benzersiz bir sessionId oluştur
+    function generateSessionId() {
+      return 'session-' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    // Mesajları DOM'a bas
+    function displayMessage(message) {
+      const messageContainer = document.getElementById('messages');
+      const newMessage = document.createElement('div');
+      newMessage.textContent = message;
+      messageContainer.appendChild(newMessage);
+    }
+    
+    // Sayfa yüklendiğinde WebSocket bağlantısını başlat
+    window.onload = function () {
+      connectWebSocket();
+    };
+    
+      </script> <!-- Yukarıdaki JS kodu buraya dahil edilir -->
+</body>
+</html>
