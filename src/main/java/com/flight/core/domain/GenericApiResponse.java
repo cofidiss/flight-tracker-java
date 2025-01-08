@@ -1,0 +1,50 @@
+package com.flight.core.domain;
+
+import org.springframework.http.HttpStatus;
+
+public class GenericApiResponse<TError, TSuccess>{
+    private HttpStatus statusCode;
+    private TError errorData;
+    private TSuccess successData;
+
+    // Constructor
+    public GenericApiResponse() {
+        this.statusCode = HttpStatus.OK;
+    }
+
+    // Getter for Success
+    public boolean isSuccess() {
+        return errorData == null;
+    }
+
+    // Getter and Setter for StatusCode
+    public HttpStatus getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(HttpStatus statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    // Getter and Setter for ErrorData
+    public TError getErrorData() {
+        return errorData;
+    }
+
+    public void setErrorData(TError errorData) {
+        this.errorData = errorData;
+    }
+
+    // Getter and Setter for SuccessData
+    public TSuccess getSuccessData() {
+        return successData;
+    }
+
+    public void setSuccessData(TSuccess successData) {
+        if (this.errorData != null) {
+            throw new IllegalStateException("Success data cannot be set when Error Data has been set.");
+        }
+        this.successData = successData;
+    }
+
+}

@@ -3,6 +3,7 @@ package com.flight.infrastructure.kafka;
 
 
 import com.flight.core.domain.FlightData;
+import io.micrometer.observation.Observation;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;

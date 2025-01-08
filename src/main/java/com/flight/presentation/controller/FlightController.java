@@ -3,6 +3,7 @@ package com.flight.presentation.controller;
 import com.flight.application.service.FlightService;
 import com.flight.core.domain.FlightData;
 import com.flight.infrastructure.kafka.FlightDataKafkaProducer;
+import com.flight.infrastructure.persistence.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,16 +21,19 @@ public class FlightController {
     private final SimpMessagingTemplate messagingTemplate;
     private final FlightService flightService;
     private final FlightDataKafkaProducer flightDataKafkaProducer;
+    private final IUserRepository userRepository;
 
-    public FlightController(FlightDataKafkaProducer flightDataKafkaProducer, SimpMessagingTemplate messagingTemplate, FlightService flightService) {
+    public FlightController(FlightDataKafkaProducer flightDataKafkaProducer, SimpMessagingTemplate messagingTemplate, FlightService flightService, IUserRepository userRepository) {
 
         this.flightDataKafkaProducer = flightDataKafkaProducer;
         this.messagingTemplate = messagingTemplate;
         this.flightService = flightService;
+        this.userRepository = userRepository;
     }
 
     @MessageMapping("/live")
     public void getLiveFlightData(@Payload String sessionId) {
+        var a = userRepository.findAll ();
         flightService.getLiveFlightData(sessionId);
     }
 
