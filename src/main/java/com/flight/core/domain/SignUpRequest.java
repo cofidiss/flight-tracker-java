@@ -1,7 +1,7 @@
 package com.flight.core.domain;
 
 public class SignUpRequest {
-
+    private Long roleId;
     private String username;
     private String password;
 
@@ -24,5 +24,12 @@ public class SignUpRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+    public Long getRoleId() {
+        return roleId;
+    }
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
 }
 

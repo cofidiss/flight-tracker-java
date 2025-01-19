@@ -4,6 +4,7 @@ package com.flight.presentation.controller;
 import com.flight.core.domain.GenericApiResponse;
 import com.flight.core.domain.SignUpRequest;
 import com.flight.core.service.IAuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        return authService.findUserByUsername(username)
-                .filter(user -> authService.verifyPassword(password, user.getPassword()))
-                .map(user -> ResponseEntity.ok("Login successful"))
-                .orElse(ResponseEntity.status(401).body("Invalid credentials"));
-    }}
+    public void login(@RequestParam String username,
+                                   @RequestParam String password,
+                                   HttpServletResponse response) {
 
+           var  cookie = authService.Login(username,password);
+response.addCookie(cookie);
+
+    } }

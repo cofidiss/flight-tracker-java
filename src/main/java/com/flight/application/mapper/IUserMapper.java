@@ -14,6 +14,7 @@ import com.flight.application.util.CustomUtil;
 public interface IUserMapper {
     @Mapping(target = "username", source = "username")
     @Mapping(target = "password", source = "password", qualifiedByName = "hashPassword")
+    @Mapping(target = "roleId", source = "roleId")
     UserEntity toEntity(SignUpRequest dto);
 
 }

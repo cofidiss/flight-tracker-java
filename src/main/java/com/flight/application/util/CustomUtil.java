@@ -9,6 +9,13 @@ import java.util.Base64;
 
 public class CustomUtil {
 
+
+    @Bean
+    public SHA512PasswordEncoder passwordEncoder() {
+        return new SHA512PasswordEncoder(); // SHA-512 encoder kullanımı
+    }
+
+
     @Named("hashPassword")
      public static String  hashPassword(String password) {
         if (password == null) {

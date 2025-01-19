@@ -2,6 +2,9 @@ package com.flight.presentation.controller;
 
 import com.flight.application.service.FlightService;
 import com.flight.core.domain.FlightData;
+import com.flight.core.domain.RequiresPermission;
+import com.flight.core.domain.RequiresPermission2;
+import com.flight.core.domain.UserRole;
 import com.flight.infrastructure.kafka.FlightDataKafkaProducer;
 import com.flight.infrastructure.persistence.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-
+@RestController
+@RequestMapping("/api/flight")
 public class FlightController {
     private final SimpMessagingTemplate messagingTemplate;
     private final FlightService flightService;
@@ -37,6 +40,7 @@ public class FlightController {
         flightService.getLiveFlightData(sessionId);
     }
 
+    @RequiresPermission(value= UserRole.Admin)
     @GetMapping("/historical")
     public String getHistoricalFlightData() {
         return "asd";
