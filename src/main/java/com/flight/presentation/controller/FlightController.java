@@ -2,8 +2,9 @@ package com.flight.presentation.controller;
 
 import com.flight.application.service.FlightService;
 import com.flight.core.domain.FlightData;
+import com.flight.core.domain.LiveFlightFilter;
 import com.flight.core.domain.RequiresPermission;
-import com.flight.core.domain.RequiresPermission2;
+
 import com.flight.core.domain.UserRole;
 import com.flight.infrastructure.kafka.FlightDataKafkaProducer;
 import com.flight.infrastructure.persistence.IUserRepository;
@@ -37,6 +38,13 @@ public class FlightController {
     @MessageMapping("/live")
     public void getLiveFlightData(@Payload String sessionId) {
         var a = userRepository.findAll ();
+        var filter = new LiveFlightFilter();
+        filter.setLatitudeMin(36);
+        filter.setLatitudeMax(42);
+        filter.setLongitudeMin(26);
+        filter.setLongitudeMax(45);
+
+        flightService.addOrUpdateLiveFlightFilter(sessionId,filter);
         flightService.getLiveFlightData(sessionId);
     }
 

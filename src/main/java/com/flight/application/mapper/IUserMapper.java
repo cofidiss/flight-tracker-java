@@ -1,5 +1,7 @@
 package com.flight.application.mapper;
 
+import com.flight.core.domain.FlightData;
+import com.flight.core.domain.FlightItemApiResponse;
 import com.flight.core.domain.SignUpRequest;
 import com.flight.core.domain.UserEntity;
 import org.mapstruct.Mapper;

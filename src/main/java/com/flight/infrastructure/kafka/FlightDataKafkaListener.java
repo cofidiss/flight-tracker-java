@@ -1,6 +1,7 @@
 package com.flight.infrastructure.kafka;
 
 import com.flight.core.domain.FlightData;
+import com.flight.core.domain.FlightDataItem;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

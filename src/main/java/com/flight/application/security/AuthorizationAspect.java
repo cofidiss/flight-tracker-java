@@ -1,7 +1,7 @@
 package com.flight.application.security;
 
 import com.flight.core.domain.RequiresPermission;
-import com.flight.core.domain.RequiresPermission2;
+
 import com.flight.core.domain.UserEntity;
 import com.flight.core.domain.UserRole;
 import com.flight.core.service.IAuthService;
