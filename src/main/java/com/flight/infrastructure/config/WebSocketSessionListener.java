@@ -1,10 +1,7 @@
-package com.flight.infrastructure.websocket;
+package com.flight.infrastructure.config;
 
-
-import com.flight.application.service.FlightService;
-import com.flight.core.service.IFlightService;
+import com.flight.application.interfaces.IFlightService;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 

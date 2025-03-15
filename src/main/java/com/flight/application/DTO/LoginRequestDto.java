@@ -1,9 +1,9 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class LoginRequestDto {
     private String username;
     private  String password;
 }

@@ -1,12 +1,11 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 @Getter
 @Setter
-public class FlightDataItem {
+public class FlightDataItemDto {
 
 
     private String flightId;          // "fr24Id" mapped to "flightId"

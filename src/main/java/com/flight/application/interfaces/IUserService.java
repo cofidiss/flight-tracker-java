@@ -1,5 +1,6 @@
-package com.flight.core.service;
+package com.flight.application.interfaces;
 
+import com.flight.application.DTO.RoleLovDto;
 import com.flight.application.DTO.SignUpRequestDto;
 import com.flight.core.domain.*;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +15,7 @@ public interface IUserService {
     public GenericApiResponse<String,Cookie> login(String username, String password);
 
     public String getUserRole (String userId);
-    public RoleLov[] getRoleLov();
+    public RoleLovDto[] getRoleLov();
     public String getUserIdFromCookie(RequestAttributes RequestAttributes);
 
 }

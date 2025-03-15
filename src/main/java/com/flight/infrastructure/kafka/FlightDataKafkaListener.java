@@ -1,7 +1,6 @@
 package com.flight.infrastructure.kafka;
 
-import com.flight.core.domain.FlightData;
-import com.flight.core.domain.FlightDataItem;
+import com.flight.application.DTO.FlightDataDto;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,10 +17,10 @@ public class FlightDataKafkaListener {
     }
 
     @KafkaListener(topics = "live-data", groupId = "session-group")
-    public void listenToTopic(ConsumerRecord<String, FlightData> record) {
+    public void listenToTopic(ConsumerRecord<String, FlightDataDto> record) {
         // Extract the key and message
         String key = record.key();
-        FlightData flightData = record.value();
+        FlightDataDto flightData = record.value();
 
         // Assume the key is the sessionId
         String sessionId = key != null ? key : "defaultSession";

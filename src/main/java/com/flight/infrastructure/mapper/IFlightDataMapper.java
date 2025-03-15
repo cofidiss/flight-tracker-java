@@ -1,10 +1,10 @@
-package com.flight.application.mapper;
+package com.flight.infrastructure.mapper;
 
+import com.flight.application.DTO.FlightApiResponseDto;
+import com.flight.application.DTO.FlightDataDto;
+import com.flight.application.DTO.FlightDataItemDto;
+import com.flight.application.DTO.FlightItemApiResponseDto;
 import com.flight.application.util.CustomUtil;
-import com.flight.core.domain.FlightApiResponse;
-import com.flight.core.domain.FlightData;
-import com.flight.core.domain.FlightDataItem;
-import com.flight.core.domain.FlightItemApiResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -27,7 +27,7 @@ public interface IFlightDataMapper {
     @Mapping(target = "originIcao", source = "origIcao")
     @Mapping(target = "destinationIcao", source = "destIata")
     @Mapping(target = "estimatedArrival", source = "eta")
-    FlightDataItem toFlightDataItem(FlightItemApiResponse flightItem);
+    FlightDataItemDto toFlightDataItem(FlightItemApiResponseDto flightItem);
     // FlightItemApiResponse listesini FlightData listesine dönüştürme
-    FlightData toFlightData(FlightApiResponse flightItems);
+    FlightDataDto toFlightData(FlightApiResponseDto flightItems);
 }

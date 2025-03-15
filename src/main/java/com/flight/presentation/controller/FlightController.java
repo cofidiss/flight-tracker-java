@@ -2,9 +2,9 @@ package com.flight.presentation.controller;
 
 import com.flight.application.DTO.FlightCoordinateRangeFilterRequestDto;
 import com.flight.application.DTO.FlightCustomFilterRequestDto;
+import com.flight.application.interfaces.IFlightService;
 import com.flight.core.domain.RequiresPermission;
 import com.flight.core.domain.UserRole;
-import com.flight.core.service.IFlightService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;

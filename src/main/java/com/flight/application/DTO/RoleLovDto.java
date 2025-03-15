@@ -1,17 +1,17 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
 import lombok.Data;
 @Data
-public class RoleLov {
+public class RoleLovDto {
 
     private String name;
     private Integer id;
 
-    public RoleLov(String name, Integer id) {
+    public RoleLovDto(String name, Integer id) {
         this.name = name;
         this.id = id;
     }
-public RoleLov(){
+public RoleLovDto(){
 
 
 }

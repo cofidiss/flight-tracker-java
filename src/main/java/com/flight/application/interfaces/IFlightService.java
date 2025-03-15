@@ -1,4 +1,4 @@
-package com.flight.core.service;
+package com.flight.application.interfaces;
 
 import com.flight.application.DTO.FlightCoordinateRangeFilterRequestDto;
 import com.flight.application.DTO.FlightCustomFilterRequestDto;

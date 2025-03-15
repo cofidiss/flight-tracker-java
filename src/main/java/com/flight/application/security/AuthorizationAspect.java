@@ -1,9 +1,9 @@
 package com.flight.application.security;
 
+import com.flight.application.interfaces.IUserService;
 import com.flight.core.domain.RequiresPermission;
 import com.flight.core.domain.UserEntity;
 import com.flight.core.domain.UserRole;
-import com.flight.core.service.IUserService;
 import com.flight.infrastructure.persistence.IUserRepository;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

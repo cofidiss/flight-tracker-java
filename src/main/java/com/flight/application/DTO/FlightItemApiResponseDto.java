@@ -1,4 +1,4 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FlightItemApiResponse {
+public class FlightItemApiResponseDto {
 
     @JsonProperty("fr24_id")
     private String fr24Id;

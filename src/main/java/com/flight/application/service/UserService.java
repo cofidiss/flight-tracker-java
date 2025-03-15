@@ -1,10 +1,11 @@
 package com.flight.application.service;
 
+import com.flight.application.DTO.RoleLovDto;
 import com.flight.application.DTO.SignUpRequestDto;
-import com.flight.application.mapper.IUserMapper;
+import com.flight.application.interfaces.IUserService;
+import com.flight.infrastructure.mapper.IUserMapper;
 import com.flight.application.util.CustomUtil;
 import com.flight.core.domain.*;
-import com.flight.core.service.IUserService;
 import com.flight.infrastructure.persistence.IUserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -88,10 +89,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public RoleLov[] getRoleLov() {
+    public RoleLovDto[] getRoleLov() {
         return Arrays.stream(UserRole.values())
-                .map(role -> new RoleLov(role.getDisplayName(), role.getValue())) // UserRole'dan RoleLov nesneleri oluşturuyoruz
-                .toArray(RoleLov[]::new); // Sonuçları RoleLov dizisi olarak dönüyoruz
+                .map(role -> new RoleLovDto(role.getDisplayName(), role.getValue())) // UserRole'dan RoleLovDto nesneleri oluşturuyoruz
+                .toArray(RoleLovDto[]::new); // Sonuçları RoleLovDto dizisi olarak dönüyoruz
     }
 
     public String getUserIdFromCookie(RequestAttributes requestAttributes) {

@@ -1,4 +1,4 @@
-package com.flight.config;
+package com.flight.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

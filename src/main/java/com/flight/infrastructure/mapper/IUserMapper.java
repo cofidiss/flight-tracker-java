@@ -1,4 +1,4 @@
-package com.flight.application.mapper;
+package com.flight.infrastructure.mapper;
 
 import com.flight.application.DTO.SignUpRequestDto;
 import com.flight.core.domain.UserEntity;

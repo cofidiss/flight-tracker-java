@@ -1,11 +1,11 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class LiveFlightFilter {
+public class LiveFlightFilterDto {
     // Getters and Setters
     private String sessionId;
     private Double latitudeMin;

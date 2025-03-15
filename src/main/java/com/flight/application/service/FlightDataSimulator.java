@@ -2,8 +2,8 @@ package com.flight.application.service;
 
 import java.util.*;
 import java.util.stream.IntStream;
-import com.flight.core.domain.FlightDataItem;
-import com.flight.core.domain.LiveFlightFilter;
+import com.flight.application.DTO.FlightDataItemDto;
+import com.flight.application.DTO.LiveFlightFilterDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +18,8 @@ public class FlightDataSimulator {
 
     private Random random = new Random();
 
-    public List<FlightDataItem> generateFlights(LiveFlightFilter filter, int count) {
-        List<FlightDataItem> flights = new ArrayList<>();
+    public List<FlightDataItemDto> generateFlights(LiveFlightFilterDto filter, int count) {
+        List<FlightDataItemDto> flights = new ArrayList<>();
 
         if (filter.getLatitudeMax() == null ||
                 filter.getLatitudeMin() == null ||
@@ -30,7 +30,7 @@ public class FlightDataSimulator {
 
         IntStream.range(0, count).forEach(i -> {
             // Create flight data
-            FlightDataItem flight = new FlightDataItem();
+            FlightDataItemDto flight = new FlightDataItemDto();
             flight.setFlightId(UUID.randomUUID().toString().substring(0, 8));
             flight.setFlightNumber("FL" + (1000 + random.nextInt(9000)));
             flight.setCallsign("CS" + (1000 + random.nextInt(9000)));

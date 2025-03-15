@@ -1,12 +1,8 @@
 package com.flight.application.service;
 
-import com.flight.application.DTO.FlightCoordinateRangeFilterRequestDto;
-import com.flight.application.DTO.FlightCustomFilterRequestDto;
-import com.flight.application.mapper.IFlightDataMapper;
-import com.flight.core.domain.FlightApiResponse;
-import com.flight.core.domain.LiveFlightFilter;
-import com.flight.core.domain.FlightData;
-import com.flight.core.service.IFlightService;
+import com.flight.application.DTO.*;
+import com.flight.application.interfaces.IFlightService;
+import com.flight.infrastructure.mapper.IFlightDataMapper;
 import com.flight.infrastructure.kafka.FlightDataKafkaProducer;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
@@ -14,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -23,7 +18,7 @@ import java.util.concurrent.*;
 public class FlightService implements IFlightService {
 
     private final FlightDataKafkaProducer kafkaProducer;
-    private final ConcurrentHashMap<String, LiveFlightFilter> liveFlightFilters = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, LiveFlightFilterDto> liveFlightFilters = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Thread> createdFetchLiveThreads = new ConcurrentHashMap<>();
     private final RestTemplate restTemplate;
     private final IFlightDataMapper flightDataMapper;
@@ -54,7 +49,7 @@ public class FlightService implements IFlightService {
                 }
 
                 var filter = liveFlightFilters.get(principalName);
-                var flightData = new FlightData();
+                var flightData = new FlightDataDto();
                 var flights = flightDataSimulator.generateFlights(filter, 50);
                 flightData.setData(flights);
 
@@ -75,13 +70,13 @@ public class FlightService implements IFlightService {
         }
     }
 
-    public FlightData fetchLiveFlightData(LiveFlightFilter filter) {
+    public FlightDataDto fetchLiveFlightData(LiveFlightFilterDto filter) {
         try {
             if (filter.getLatitudeMax() == null ||
                     filter.getLatitudeMin() == null ||
                     filter.getLongitudeMax() == null ||
                     filter.getLongitudeMin() == null) {
-                return new FlightData();
+                return new FlightDataDto();
             }
 
             var token = environment.getProperty("flightradar24.token");
@@ -116,8 +111,8 @@ public class FlightService implements IFlightService {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             // API'den veriyi alma
-            var response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, FlightApiResponse.class);
-            FlightApiResponse flightApiResponse = response.getBody();
+            var response = restTemplate.exchange(apiUrl, HttpMethod.GET, entity, FlightApiResponseDto.class);
+            FlightApiResponseDto flightApiResponse = response.getBody();
 
             if (flightApiResponse != null && flightApiResponse.getData() != null) {
                 return flightDataMapper.toFlightData(flightApiResponse);
@@ -141,7 +136,7 @@ public class FlightService implements IFlightService {
             presentFilter.setGroundSpeedMin(filter.getGroundSpeedMin());
             return;
         }
-        var newFilter = new LiveFlightFilter();
+        var newFilter = new LiveFlightFilterDto();
         newFilter.setCategory(filter.getCategory());
         newFilter.setAltitudeMax(filter.getAltitudeMax());
         newFilter.setAltitudeMin(filter.getAltitudeMin());
@@ -161,7 +156,7 @@ public class FlightService implements IFlightService {
             presentFilter.setLatitudeMin(flightCoordinateRangeFilterDto.getLatitudeMin());
             return;
         }
-        var newFilter = new LiveFlightFilter();
+        var newFilter = new LiveFlightFilterDto();
         newFilter.setLongitudeMax(flightCoordinateRangeFilterDto.getLongitudeMax());
         newFilter.setLongitudeMin(flightCoordinateRangeFilterDto.getLongitudeMin());
         newFilter.setLatitudeMax(flightCoordinateRangeFilterDto.getLatitudeMax());

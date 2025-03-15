@@ -1,9 +1,9 @@
 package com.flight.presentation.controller;
 
+import com.flight.application.DTO.RoleLovDto;
 import com.flight.application.DTO.SignUpRequestDto;
-import com.flight.core.domain.LoginRequest;
-import com.flight.core.domain.RoleLov;
-import com.flight.core.service.IUserService;
+import com.flight.application.DTO.LoginRequestDto;
+import com.flight.application.interfaces.IUserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        var result = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+    public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        var result = userService.login(loginRequestDto.getUsername(), loginRequestDto.getPassword());
         if (result.isSuccess()) {
             response.addCookie(result.getSuccessData());
             return "Login Successful";
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/getRoleLov")
-    public RoleLov[] getRoleLov() {
+    public RoleLovDto[] getRoleLov() {
         return userService.getRoleLov();
     }
 }
