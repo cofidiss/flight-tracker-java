@@ -1,6 +1,6 @@
-package com.flight.core.domain;
+package com.flight.application.DTO;
 
-public class SignUpRequest {
+public class SignUpRequestDto {
     private Long roleId;
     private String username;
     private String password;

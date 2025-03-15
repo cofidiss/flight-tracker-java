@@ -4,7 +4,7 @@ import com.flight.core.domain.RequiresPermission;
 
 import com.flight.core.domain.UserEntity;
 import com.flight.core.domain.UserRole;
-import com.flight.core.service.IAuthService;
+import com.flight.core.service.IUserService;
 import com.flight.infrastructure.persistence.IUserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,9 +30,10 @@ public class AuthorizationAspect {
 
 
     private final IUserRepository userRepository;
-
-    public AuthorizationAspect( IUserRepository userRepository) {
+    private final IUserService userService;
+    public AuthorizationAspect( IUserRepository userRepository,IUserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
 
@@ -53,10 +54,10 @@ public class AuthorizationAspect {
         }
 
         // Anotasyondan gerekli rol bilgisi
-        int requiredRoleId = userRoleRequired.ordinal();
+        int requiredRoleId = userRoleRequired.getValue();
 
         // Cookie'den userId'yi al
-        String userId = getUserIdFromCookie();
+        String userId = userService.getUserIdFromCookie(RequestContextHolder.getRequestAttributes());
         if (userId == null) {
             throw new AccessDeniedException("User ID not found in cookies.");
         }
@@ -77,20 +78,5 @@ public class AuthorizationAspect {
     }
 
     // Cookie'den userId'yi alır
-    private String getUserIdFromCookie() {
-        // Request'ten cookie'yi alın
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes instanceof ServletRequestAttributes) {
-            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("userId".equals(cookie.getName())) {
-                        return cookie.getValue();
-                    }
-                }
-            }
-        }
-        return null; // Cookie'den userId alınamazsa null döner
-    }
+
 }

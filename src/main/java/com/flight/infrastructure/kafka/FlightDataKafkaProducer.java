@@ -20,9 +20,9 @@ public class FlightDataKafkaProducer {
     }
 
     public void sendLiveFlightData(String key, FlightData flightData) {
+        if(flightData == null)
+            return;
 
-        double randomValue = 1.05 + (1.1 - 1.05) * Math.random();
-        flightData.getData().forEach(a -> a.setLongitude(a.getLongitude() * randomValue));
 
         kafkaTemplate.send("live-data",key, flightData);  // Kafka topic'ine veri gönderiliyor
 

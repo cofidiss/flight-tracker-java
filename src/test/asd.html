@@ -24,9 +24,9 @@
       // WebSocket bağlantısını aç
       stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.send("/app/live",  {},sessionId);
+          stompClient.send("/app/live", {}, JSON.stringify(filter));
         // Bu sessionId'ye özel topic'e abone ol
-        stompClient.subscribe(`/topic/${sessionId}`, function (messageOutput) {
+        stompClient.subscribe(`/topic`, function (messageOutput) {
           // Kafka'dan gelen mesajı al ve WebSocket ile ilet
           console.log('Received message: ' + messageOutput.body);
     

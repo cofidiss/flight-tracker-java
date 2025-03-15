@@ -27,5 +27,5 @@ public class FlightDataKafkaListener {
         String sessionId = key != null ? key : "defaultSession";
 
         // Kafka'dan gelen mesajı, WebSocket üzerinden frontend'e gönderiyoruz
-        messagingTemplate.convertAndSend("/topic/" + sessionId, flightData);
+        messagingTemplate.convertAndSendToUser(sessionId,"/topic/liveflight", flightData);
 }}
