@@ -1,19 +1,10 @@
 package com.flight.presentation.controller;
 
-
 import com.flight.application.DTO.SignUpRequestDto;
 import com.flight.core.domain.LoginRequest;
 import com.flight.core.domain.RoleLov;
-
 import com.flight.core.service.IUserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -21,45 +12,40 @@ import org.springframework.web.context.request.RequestContextHolder;
 @RequestMapping("/api/user")
 public class UserController {
 
+    private final IUserService userService;
 
-    private IUserService userService;
-    UserController(IUserService userService){
-          this.userService = userService;
-
-
-
+    public UserController(IUserService userService) {
+        this.userService = userService;
     }
+
     @PostMapping("/signup")
-    public String Signup(@RequestBody SignUpRequestDto signUpRequest, HttpServletResponse response) {
-        var result = userService.SignUp(signUpRequest);
+    public String signUp(@RequestBody SignUpRequestDto signUpRequest, HttpServletResponse response) {
+        var result = userService.signUp(signUpRequest);
         if (result.isSuccess()) {
             response.addCookie(result.getSuccessData());
-            return  "Signup Succesfull";
+            return "Signup Successful";
         }
-        return "Signup UnSuccesfull";
+        return "Signup Unsuccessful";
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequest loginRequest,
-
-                      HttpServletResponse response) {
-      var cookie = userService.Login(loginRequest.getUsername(),loginRequest.getPassword());
-      response.addCookie(cookie);
-
+    public String login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        var result = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        if (result.isSuccess()) {
+            response.addCookie(result.getSuccessData());
+            return "Login Successful";
+        }
+        return "Login Unsuccessful";
     }
 
     @GetMapping("/getUserRole")
-    public String  getRoles(@AuthenticationPrincipal User user ) {
-       var userId =  userService. getUserIdFromCookie(RequestContextHolder.getRequestAttributes());
-        return userService.GetUserRole(userId);
-
-    }
-    @GetMapping("/getRolelov")
-    public RoleLov[] getRolelov() {
-
-       return userService.GetRolelov();
-
-
+    public String getUserRole() {
+        var userId = userService.getUserIdFromCookie(RequestContextHolder.getRequestAttributes());
+        return userService.getUserRole(userId);
     }
 
+    @GetMapping("/getRoleLov")
+    public RoleLov[] getRoleLov() {
+        return userService.getRoleLov();
+    }
 }

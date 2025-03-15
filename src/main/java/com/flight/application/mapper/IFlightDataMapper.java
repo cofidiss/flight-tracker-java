@@ -12,8 +12,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring",uses = CustomUtil.class)
 public interface IFlightDataMapper {
 
-
-
     @Mapping(target = "flightId", source = "fr24Id")
     @Mapping(target = "latitude", source = "lat")
     @Mapping(target = "longitude", source = "lon")

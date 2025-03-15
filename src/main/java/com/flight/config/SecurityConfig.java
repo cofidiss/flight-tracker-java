@@ -12,23 +12,21 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         /*http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login", "/signup", "/api/flight/live/filter","/swagger-ui/**").permitAll() // Bu yolları herkese aç
-                        .anyRequest().authenticated() // Diğer istekleri kimlik doğrulama gerektir
+                        .requestMatchers("/login", "/signup", "/api/flight/live/filter","/swagger-ui/**").permitAll() // Allow these paths to everyone
+                        .anyRequest().authenticated() // Require authentication for other requests
                 )
-                .csrf().disable() // CSRF korumasını devre dışı bırak
-                .formLogin().disable(); // Fo
+                .csrf().disable() // Disable CSRF protection
+                .formLogin().disable(); // Disable form login
         */
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // Tüm isteklere izin ver
+                        .anyRequest().permitAll() // Allow all requests
                 )
-                .csrf().disable() // CSRF korumasını kapat
+                .csrf().disable() // Disable CSRF protection
                 .formLogin().disable();
         return http.build();
     }

@@ -1,9 +1,8 @@
 package com.flight.application.service;
 
-
 import com.flight.application.DTO.SignUpRequestDto;
 import com.flight.application.mapper.IUserMapper;
-import com.flight.application.util.SHA512PasswordEncoder;
+import com.flight.application.util.CustomUtil;
 import com.flight.core.domain.*;
 import com.flight.core.service.IUserService;
 import com.flight.infrastructure.persistence.IUserRepository;
@@ -19,22 +18,16 @@ import java.util.Optional;
 @Service
 public class UserService implements IUserService {
 
-
-
     private IUserMapper userMapper;
-    private final SHA512PasswordEncoder passwordEncoder;
-
     private IUserRepository userRepository;
-    UserService(IUserMapper userMapper, IUserRepository userRepository, SHA512PasswordEncoder passwordEncoder
-                ){
 
+    public UserService(IUserMapper userMapper, IUserRepository userRepository) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    }
 
-}
-
-    public GenericApiResponse<String, Cookie> SignUp(SignUpRequestDto signUpRequest) {
+    @Override
+    public GenericApiResponse<String, Cookie> signUp(SignUpRequestDto signUpRequest) {
         GenericApiResponse<String, Cookie> apiResponse = new GenericApiResponse<>();
 
         // DTO'yu Entity'ye dönüştür
@@ -45,71 +38,62 @@ public class UserService implements IUserService {
 
         Optional<UserEntity> userOpt = userRepository.findByUsername(signUpRequest.getUsername());
 
-        var cookie = CreateUserCookie(userOpt);
+        var cookie = createUserCookie(userOpt);
         // Başarı yanıtını ayarla
         apiResponse.setSuccessData(cookie);
         return apiResponse;
     }
 
-    public Optional<UserEntity> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
+    @Override
     public boolean verifyPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.encode(rawPassword).equals(encodedPassword) ;
+        return CustomUtil.hashPassword(rawPassword).equals(encodedPassword);
     }
-private Cookie CreateUserCookie(Optional<UserEntity> userOpt){
 
-    return userOpt
-            .map(user -> {
-                // Şifre doğruysa, UserEntity nesnesini alıyoruz
-                UserEntity userEntity = user;
+    private Cookie createUserCookie(Optional<UserEntity> userOpt) {
+        return userOpt
+                .map(user -> {
+                    // Şifre doğruysa, UserEntity nesnesini alıyoruz
+                    UserEntity userEntity = user;
 
-                // Cookie oluştur ve ekle
-                Cookie userIdCookie = new Cookie("userId", userEntity.getId().toString());
-                userIdCookie.setHttpOnly(true);  // Cookie güvenliği için HttpOnly
-                userIdCookie.setSecure(true);    // HTTPS için Secure olarak ayarla (HTTPS kullanıyorsanız)
-                userIdCookie.setPath("/");       // Cookie tüm site için geçerli
-                userIdCookie.setMaxAge(7 * 24 * 60 * 60); // 1 hafta geçerlilik
+                    // Cookie oluştur ve ekle
+                    Cookie userIdCookie = new Cookie("userId", userEntity.getId().toString());
+                    userIdCookie.setHttpOnly(true);  // Cookie güvenliği için HttpOnly
+                    userIdCookie.setSecure(true);    // HTTPS için Secure olarak ayarla (HTTPS kullanıyorsanız)
+                    userIdCookie.setPath("/");       // Cookie tüm site için geçerli
+                    userIdCookie.setMaxAge(7 * 24 * 60 * 60); // 1 hafta geçerlilik
 
-                return userIdCookie;
-            })
-            .orElse(null);
-}
+                    return userIdCookie;
+                })
+                .orElse(null);
+    }
 
     @Override
-    public Cookie Login(String username, String password) {
-
+    public GenericApiResponse<String, Cookie> login(String username, String password) {
+        GenericApiResponse<String, Cookie> apiResponse = new GenericApiResponse<>();
         Optional<UserEntity> userOpt = userRepository.findByUsername(username)
-                .filter(user -> verifyPassword(password, user.getPassword())); // Şifre doğrulaması
-        return CreateUserCookie(userOpt);
+                .filter(user -> verifyPassword(password, user.getPassword()));
 
+        var cookie = createUserCookie(userOpt);
+        apiResponse.setSuccessData(cookie);
+        return apiResponse; // Şifre doğrulaması
     }
-    public boolean hasPermission(String userId, UserRole requiredRole) {
-        // Veritabanından kullanıcıyı al
+
+    @Override
+    public String getUserRole(String userId) {
         UserEntity user = userRepository.findById(Long.parseLong(userId))
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
         // Rolleri kontrol et
-        return  user.getRoleId() ==requiredRole.ordinal() ;
-
+        return UserRole.fromId(user.getRoleId()).getDisplayName();
     }
 
     @Override
-    public String GetUserRole(String userId) {
-        UserEntity user = userRepository.findById(Long.parseLong(userId))
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
-
-        // Rolleri kontrol et
-        return  UserRole.fromId(user.getRoleId()).getDisplayName() ;
-    }
-
-    @Override
-    public RoleLov[] GetRolelov() {
+    public RoleLov[] getRoleLov() {
         return Arrays.stream(UserRole.values())
                 .map(role -> new RoleLov(role.getDisplayName(), role.getValue())) // UserRole'dan RoleLov nesneleri oluşturuyoruz
                 .toArray(RoleLov[]::new); // Sonuçları RoleLov dizisi olarak dönüyoruz
     }
+
     public String getUserIdFromCookie(RequestAttributes requestAttributes) {
         // Request'ten cookie'yi alın
 
@@ -122,14 +106,9 @@ private Cookie CreateUserCookie(Optional<UserEntity> userOpt){
                     if ("userId".equals(cookie.getName())) {
                         return cookie.getValue();
                     }
-
                 }
             }
         }
         return null; // Cookie'den userId alınamazsa null döner
     }
-
-
-
-
 }
