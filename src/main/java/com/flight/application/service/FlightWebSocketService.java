@@ -41,8 +41,7 @@ public class FlightWebSocketService {
                                     )
                                     .toList();
 
-                    // Kullanıcıya sadece sonuç varsa gönder
-                    if (!filteredFlights.isEmpty()) {
+
                         var flightData = new FlightDataDto();
                         flightData.setData(filteredFlights);
                         messagingTemplate.convertAndSendToUser(
@@ -50,7 +49,7 @@ public class FlightWebSocketService {
                                 "/topic/liveflight",
                                 flightData
                         );
-                    }
+
                 });
     }
 
