@@ -6,6 +6,8 @@ import com.flight.application.DTO.FlightDataItemDto;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FlightDataKafkaProducer {
 
@@ -16,12 +18,10 @@ public class FlightDataKafkaProducer {
         this.kafkaTemplate2 = null;
     }
 
-    public void sendLiveFlightData(String key, FlightDataDto flightData) {
-        if(flightData == null)
+    public void sendLiveFlightData(String key, FlightDataDto flights) {
+        if(flights == null)
             return;
-
-
-        kafkaTemplate.send("live-data",key, flightData);  // Kafka topic'ine veri gönderiliyor
+        kafkaTemplate.send("live-data", flights);  // Kafka topic'ine veri gönderiliyor
 
     }
 

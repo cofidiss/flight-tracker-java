@@ -29,7 +29,6 @@ public class FlightController {
     public void getLiveFlightData(Principal principal, @Payload FlightCoordinateRangeFilterRequestDto flightCoordinateRangeFilterDto) {
         var principalName = principal.getName();
         flightService.addOrUpdateFlightCoordinateRangeFilter(principalName, flightCoordinateRangeFilterDto);
-        flightService.startGetLiveFlightDataTask(principalName);
     }
 
     @RequiresPermission(value = UserRole.PremiumUser)

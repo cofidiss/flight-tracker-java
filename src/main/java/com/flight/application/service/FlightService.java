@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -26,13 +27,16 @@ public class FlightService implements IFlightService {
     private final Map<String, ScheduledFuture<?>> sessionTasks = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
     private final FlightDataSimulator flightDataSimulator;
+    private final FlightWebSocketService flightWebSocketService;
 
-    public FlightService(FlightDataKafkaProducer kafkaProducer, IFlightDataMapper flightDataMapper, Environment environment, RestTemplate restTemplate, FlightDataSimulator flightDataSimulator) {
+    public FlightService(FlightDataKafkaProducer kafkaProducer, IFlightDataMapper flightDataMapper, Environment environment, RestTemplate restTemplate, FlightDataSimulator flightDataSimulator, FlightWebSocketService flightWebSocketService) {
         this.kafkaProducer = kafkaProducer;
         this.restTemplate = restTemplate;
         this.flightDataMapper = flightDataMapper;
         this.environment = environment;
         this.flightDataSimulator = flightDataSimulator;
+        this.flightWebSocketService = flightWebSocketService;
+        startGenerateFlightData();
     }
 
     @Override
@@ -50,7 +54,7 @@ public class FlightService implements IFlightService {
 
                 var filter = liveFlightFilters.get(principalName);
                 var flightData = new FlightDataDto();
-                var flights = flightDataSimulator.generateFlights(filter, 50);
+                var flights = flightDataSimulator.generateFlights( 50);
                 flightData.setData(flights);
 
                 kafkaProducer.sendLiveFlightData(principalName, flightData);
@@ -164,7 +168,26 @@ public class FlightService implements IFlightService {
         liveFlightFilters.put(principal, newFilter);
     }
 
+    @Override
+    public void flightReceieved(List<FlightDataItemDto> flights) {
+        flightWebSocketService.broadcastFlight(flights,liveFlightFilters);
+    }
+
     public void removeLiveFlightFilter(String sessionId) {
         liveFlightFilters.remove(sessionId);
     }
+    private void startGenerateFlightData(){
+
+        Runnable task = () -> {
+
+            var flights = flightDataSimulator.generateFlights( 1000);
+            var flightDataDto = new FlightDataDto();
+            flightDataDto.setData(flights);
+
+            kafkaProducer.sendLiveFlightData("",flightDataDto);
+        };
+        ScheduledFuture<?> future = scheduler.scheduleAtFixedRate(task, 0, 2, TimeUnit.SECONDS);
+
+    }
+
 }

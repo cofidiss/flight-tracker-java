@@ -1,30 +1,33 @@
 package com.flight.infrastructure.kafka;
 
 import com.flight.application.DTO.FlightDataDto;
+import com.flight.application.DTO.FlightDataItemDto;
+import com.flight.application.service.FlightService;
+import com.flight.application.service.FlightWebSocketService;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 
-@Service
+
+@Component
+@RequiredArgsConstructor
 public class FlightDataKafkaListener {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final FlightService flightService;
 
-    public FlightDataKafkaListener(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    @KafkaListener(
+            topics = "live-data",
+            groupId = "flight-websocket"
+    )
+    public void onFlight(
+            FlightDataDto flights
+    ) {
+
+        flightService.flightReceieved(flights.getData());
     }
-
-    @KafkaListener(topics = "live-data", groupId = "session-group")
-    public void listenToTopic(ConsumerRecord<String, FlightDataDto> record) {
-        // Extract the key and message
-        String key = record.key();
-        FlightDataDto flightData = record.value();
-
-        // Assume the key is the sessionId
-        String sessionId = key != null ? key : "defaultSession";
-
-        // Kafka'dan gelen mesajı, WebSocket üzerinden frontend'e gönderiyoruz
-        messagingTemplate.convertAndSendToUser(sessionId,"/topic/liveflight", flightData);
-}}
+}
