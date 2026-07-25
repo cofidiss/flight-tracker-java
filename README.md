@@ -5,41 +5,80 @@ https://github.com/user-attachments/assets/abad6eed-5f9d-4a9d-b797-bb9209ee3cf2
 
 <img width="5100" height="808" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/77771f91-658a-4854-ae87-6ecf8a76fb74" />
 
-Real-Time Flight Tracking System
+## Project Workflow
 
-A real-time flight tracking application that collects global flight data, processes it with Apache Kafka, filters flights based on user preferences, and delivers real-time updates to the frontend via WebSocket.
+### 1. Flight Data Collection
 
-Features
-🌍 Global real-time flight tracking
-🚀 Apache Kafka for flight data streaming
-⚡ Parallel flight data processing and filtering
-🔄 Real-time updates with WebSocket
-📍 Dynamic map-based coordinate filtering
-✈️ Premium filters for aircraft/helicopter type, altitude, and speed
-🔐 Cookie-based authentication
-🛡️ Authorization with Spring Security
-🗺️ Interactive maps with React Leaflet
-🐳 Docker Compose deployment
-🗄️ Database integration
-Architecture
-Flight Data
-    ↓
-Apache Kafka
-    ↓
-Parallel Processing & Filtering
-    ↓
-WebSocket
-    ↓
-React + React Leaflet
-    ↓
-Real-Time Flight Map
+The application continuously collects real-time flight data from around the world.
 
-When users change the visible map area, the relevant coordinates are sent via WebSocket. The backend filters the flight data accordingly and sends only relevant flights to the frontend.
+The incoming flight data is published to **Apache Kafka**, which acts as the central streaming platform for handling high-volume flight data.
 
-The application uses Java, Spring Boot, Gradle, Apache Kafka, WebSocket, React, React Leaflet, Docker, Docker Compose, and a database.
+### 2. Kafka-Based Data Processing
 
-Running with Docker
-docker compose up -d
+Kafka consumers receive the incoming flight data and process it in parallel.
+
+This architecture allows the application to efficiently handle a large number of flight records and distribute the processing workload across multiple consumers.
+
+### 3. Flight Filtering
+
+Flight filters are applied based on user preferences and the current map area.
+
+Users can filter flight data based on criteria such as:
+
+* Aircraft type
+* Altitude
+* Speed
+
+The visible map coordinates are also sent from the React client through WebSocket. This allows the backend to process and return flight data relevant to the user's current map area.
+
+### 4. Real-Time WebSocket Communication
+
+The React frontend maintains a WebSocket connection with the Spring Boot backend.
+
+The client sends the current map coordinates and selected flight filters through WebSocket. After processing the flight data, the backend sends the filtered real-time flight information back to the client without requiring continuous HTTP polling.
+
+This provides faster and more efficient real-time communication.
+
+### 5. Interactive Flight Map
+
+The React application uses **React Leaflet** to display flight data on an interactive map.
+
+As users move or zoom the map, the current map coordinates are sent to the backend. The backend then filters the available flight data based on the selected area and user filters.
+
+### 6. Premium User Features
+
+Premium users have access to additional flight filtering options.
+
+They can filter flights based on advanced criteria such as aircraft or helicopter type, altitude, and speed.
+
+This provides premium users with more detailed control over the flight data displayed on the map.
+
+### 7. Authentication & Authorization
+
+User authentication is handled securely using cookie-based authentication.
+
+The application uses **Spring Security** for authentication and authorization. Protected functionality is secured using role-based access control and method-level security.
+
+User and role information is stored in the database and used to control access to protected features.
+
+### 8. Database
+
+The database is used to store application-related user information rather than real-time flight data.
+
+It stores information such as:
+
+* Users
+* Roles
+* Authentication and authorization data
+
+Real-time flight data is processed through the Kafka pipeline and is not stored in the database.
+
+### 9. Docker Deployment
+
+The application and its required services are containerized using **Docker**.
+
+The complete application environment can be started using **Docker Compose**, allowing the backend, frontend, Kafka, database, and other required services to run together in a consistent environment.
+
 
 To stop the application:
 
