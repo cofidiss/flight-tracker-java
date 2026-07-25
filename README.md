@@ -1,3 +1,6 @@
+
+<img width="5100" height="808" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/77771f91-658a-4854-ae87-6ecf8a76fb74" />
+
 Real-Time Flight Tracking System
 
 A real-time flight tracking application that collects global flight data, processes it with Apache Kafka, filters flights based on user preferences, and delivers real-time updates to the frontend via WebSocket.
