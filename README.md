@@ -83,14 +83,15 @@ The complete application environment can be started using **Docker Compose**, al
 To stop the application:
 
 docker compose down
-Technologies Used
-Frontend: React, Vite, TypeScript
-Backend: Spring Boot, POM
-Database: PostgreSQL
-Caching: Redis
-Message Broker: RabbitMQ
-Real-Time Communication: WebSocket (STOMP)
-Dynamic Queries: QueryDSL
-Authentication: JWT with HTTP-Only Cookies
-Authorization: Role-Based Access Control (RBAC)
-Password Security: BCrypt
+
+### Technologies Used
+
+* **Frontend:** React, TypeScript
+* **Backend:** Spring Boot, Gradle
+* **Database:** PostgreSQL
+* **Message Broker:** Kafka
+* **Real-Time Communication:** WebSocket (STOMP)
+* **Dynamic Queries:** Jpa
+* **Authentication:** JWT with HTTP-Only Cookies
+* **Authorization:** Role-Based Access Control (RBAC)
+* **Password Security:** Hashing
